@@ -11,9 +11,7 @@ env/
 # Environment secrets — NEVER commit these
 backend/.env
 
-# ML model artifacts (large files — regenerate with train_ml.py)
-backend/*.pkl
-backend/*.pt
+
 
 # Frontend
 frontend/node_modules/

@@ -17,16 +17,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
-# Generate ML models during build (since .pkl and .pt are in .gitignore)
-RUN python train_ml.py
-
 # Expose the Flask API port
 EXPOSE 5000
 
-# Production server: gunicorn with 2 workers and generous timeout for SHAP
+# Production server: gunicorn with 1 worker to save RAM on free tier
 CMD ["gunicorn", \
      "--bind", "0.0.0.0:5000", \
-     "--workers", "2", \
+     "--workers", "1", \
      "--timeout", "120", \
      "--access-logfile", "-", \
      "--error-logfile", "-", \
