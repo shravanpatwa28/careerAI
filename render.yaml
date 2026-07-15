@@ -2,7 +2,7 @@ services:
   # ── Backend: Flask API (Docker Web Service) ─────────────────────
   - type: web
     name: careerai-backend
-    runtime: docker
+    env: docker
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
     plan: free
@@ -16,12 +16,11 @@ services:
 
   # ── Frontend: React Static Site ─────────────────────────────────
   - type: web
-    name: careerai-frontend
-    runtime: static
+    name: careerai-frontend-site
+    env: static
     buildCommand: npm ci && npm run build
     staticPublishPath: ./dist
     rootDir: ./frontend
-    plan: free
     envVars:
       - key: VITE_API_URL
         fromService:
