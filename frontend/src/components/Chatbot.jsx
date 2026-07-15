@@ -62,7 +62,10 @@ const Chatbot = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/chat', { message: msgText });
+      // Use Render's dynamically provided VITE_API_URL if it exists, otherwise default to local dev
+      const API_BASE = import.meta.env.VITE_API_URL ? `https://${import.meta.env.VITE_API_URL}` : 'http://localhost:5000';
+      
+      const res = await axios.post(`${API_BASE}/api/chat`, { message: msgText });
       setMessages(prev => [...prev, { sender: 'bot', text: res.data.reply }]);
     } catch {
       setMessages(prev => [...prev, { sender: 'bot', text: 'Sorry, I am having trouble connecting. Please make sure the backend is running.' }]);

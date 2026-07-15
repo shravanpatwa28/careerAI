@@ -38,7 +38,10 @@ function App() {
     }, 1200);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/predict', payload);
+      // Use Render's dynamically provided VITE_API_URL if it exists, otherwise default to local dev
+      const API_BASE = import.meta.env.VITE_API_URL ? `https://${import.meta.env.VITE_API_URL}` : 'http://localhost:5000';
+      const res = await axios.post(`${API_BASE}/api/predict`, payload);
+      
       clearInterval(msgTimer);
       setResults(res.data);
       setAppState('results');
