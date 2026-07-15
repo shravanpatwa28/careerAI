@@ -14,8 +14,11 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code and model artifacts
+# Copy application code
 COPY . .
+
+# Generate ML models during build (since .pkl and .pt are in .gitignore)
+RUN python train_ml.py
 
 # Expose the Flask API port
 EXPOSE 5000
