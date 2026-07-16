@@ -17,12 +17,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
-# Expose the Flask API port
-EXPOSE 5000
+# Expose the Flask API port for Hugging Face Spaces (defaults to 7860)
+EXPOSE 7860
 
 # Production server: gunicorn with 1 worker to save RAM on free tier
 CMD ["gunicorn", \
-     "--bind", "0.0.0.0:5000", \
+     "--bind", "0.0.0.0:7860", \
      "--workers", "1", \
      "--timeout", "120", \
      "--access-logfile", "-", \
