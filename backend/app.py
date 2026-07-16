@@ -14,14 +14,12 @@ import json
 import pickle
 import numpy as np
 import shap
-import torch
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
 from groq import Groq
 
 from career_rag import retrieve_context
-from confidence_model import SkillEmbedder, get_calibrated_confidence
 
 # ─────────────────────────────────────────────────────────────────
 # Config
@@ -53,11 +51,6 @@ with open("cluster_centers.json") as f:
 with open("pca_reference.json") as f:
     pca_reference = json.load(f)
 
-# PyTorch SkillEmbedder
-print("Loading PyTorch SkillEmbedder...")
-confidence_model = SkillEmbedder()
-confidence_model.load_state_dict(torch.load("confidence_model.pt", map_location="cpu", weights_only=True))
-confidence_model.eval()
 print("All models loaded ✅")
 
 # ─────────────────────────────────────────────────────────────────
@@ -125,8 +118,8 @@ def predict():
     prob       = rf_model.predict_proba(X)[0]
     rf_confidence = round(float(max(prob)) * 100, 2)
 
-    # ── Calibrated Confidence (PyTorch SkillEmbedder) ──
-    calibrated_confidence = get_calibrated_confidence(confidence_model, features)
+    # ── Calibrated Confidence (Fallback to RF) ──
+    calibrated_confidence = rf_confidence
 
     # ── HDBSCAN Persona Cluster ──
     cluster_id   = resolve_cluster(features)
